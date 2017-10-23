@@ -1,1 +1,77 @@
+#include <iostream>
 
+using namespace std;
+
+struct complex_t 
+{
+	float real;
+	float imag;
+};
+
+complex_t add(complex_t rhs, complex_t lhs) 
+{
+	complex_t result;
+	result.real = rhs.real + lhs.real;
+	result.imag = rhs.imag + lhs.imag;
+	return result;
+}
+
+complex_t sub(complex_t rhs, complex_t lhs) 
+{
+	complex_t result;
+	result.real = rhs.real - lhs.real;
+	result.imag = rhs.imag - lhs.imag;
+	return result;
+}
+
+complex_t mul(complex_t rhs, complex_t lhs) 
+{
+	complex_t result;
+	result.real = rhs.real*lhs.real - rhs.imag*lhs.imag;
+	result.imag = rhs.imag*lhs.real + rhs.real*lhs.imag;
+	return result;
+}
+
+complex_t div(complex_t rhs, complex_t lhs) 
+{
+	complex_t result;
+	result.real = (rhs.real*lhs.real + rhs.imag*lhs.imag) / (lhs.real*lhs.real + lhs.imag*lhs.imag);
+	result.imag = (rhs.imag*lhs.real - rhs.real*lhs.imag) / (lhs.real*lhs.real + lhs.imag*lhs.imag);
+	return result;
+}
+
+std::istream & read(std::istream & stream, complex_t & complex) 
+{
+	char a, b, c;
+	float real;
+	float imag;
+	if (stream >> a && a == '(' && stream >> real && stream >> b && b == ',' && stream >> imag && stream >> c && c == ')') 
+	{
+		complex.real = real;
+		complex.imag = imag;
+	}
+	else stream.setstate(std::ios::failbit);
+	return stream;
+}
+
+std::ostream & write(std::ostream & stream, complex_t complex) 
+{
+	stream << "(" << complex.real << "," << complex.imag << ")";
+	return stream;
+}
+
+int main()
+{
+	char op;
+	complex_t r1, r2;
+
+	if (read(cin, r1) && (cin >> op) && read(cin, r2))
+	{
+		if (op == '+') write(cout, add(r1, r2));
+		if (op == '-') write(cout, sub(r1, r2));
+		if (op == '*') write(cout, mul(r1, r2));
+		if (op == '/') write(cout, div(r1, r2));
+	}
+	else cout << "An error has occured while reading input data\n";
+	return 0;
+}
